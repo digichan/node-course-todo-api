@@ -25,8 +25,6 @@ app.listen(3000, () => {
   console.log('Started on port 3000');
 })
 
-// oneMoreTodo.save().then((doc)=>{
-//   console.log('Saved: ',JSON.stringify(doc, undefined, 2));
-// }, (e)=> {
-//   console.log('Error: ', e);
-// });
+module.exports = {app};
+
+// "echo \"Error: no test specified\" && exit 1"
