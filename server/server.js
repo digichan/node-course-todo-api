@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose');
 // This mongoose is not a normal one, but modified one.
@@ -27,6 +28,34 @@ app.get('/todos', (req, res) => {
   }, (e) => {
     res.status(400).send(e);
   })
+})
+
+// GET /todos/1234324
+app.get('/todos/:id', (req, res) => {
+  //res.send(req.params);
+  var id = req.params.id;
+  // Valid id using isValid
+  if(!ObjectID.isValid(id)) {
+    // 404 - send back empty send
+    return res.status(404).send("id not valid"); // send(): empty body
+  }
+
+  // findById
+  Todo.findById(id).then((todo) => {
+  //succss
+    // if no todo - send back 404 with empty body
+    if(!todo) {
+      return res.status(404).send('todo not found');
+    }
+    // if todo - send it back
+    res.send({todo});// res.send(todo);
+
+  }).catch((e) => {
+  //error
+    // 400 - send empty body back
+    res.status(400).send();
+  })
+
 })
 
 app.listen(3000, () => {

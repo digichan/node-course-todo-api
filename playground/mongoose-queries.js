@@ -4,7 +4,7 @@ const {mongoose} = require('./../server/db/mongoose');
 const {Todo} = require('./../server/models/todo');
 const {User} = require('./../server/models/user');
 
-User.findById('55c5de372bc3176b081143f67').then((user) => {
+User.findById('5c5de372bc3176b081143f67').then((user) => {
   if(!user)
     return console.log('Unable to find user');
 
