@@ -1,12 +1,16 @@
 const expect = require('expect');
 const request = require('supertest');
+const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
+// an array of test cases
 const todos = [{
+  _id: new ObjectID(),
   text: 'First test todo'
 }, {
+  _id: new ObjectID(),
   text: 'Second test todo'
 }]
 
@@ -19,6 +23,7 @@ beforeEach((done) => {
 describe('POST /todos', ()=> {
   it('should create a new todo', (done) => {
       var text = 'Test todo text';
+      'Test todo text';
       request(app)
       .post('/todos')
       .send({text})
@@ -41,7 +46,7 @@ describe('POST /todos', ()=> {
     .post('/todos') // URL
     .send({}) // send an invalid data
     .expect(400)
-    .end((err, ree) => {
+    .end((err, res) => {
       if (err) {
         return done(err);
       }
@@ -64,4 +69,34 @@ describe('Get /todos', () => {
     })
     .end(done);
   })
-})
+});
+
+describe('GET /todos/:id', () => {
+  // test case
+  it('should return todo doc', (done) => {
+    // using supertest request from app
+    request(app)
+    .get(`/todos/${todos[0]._id.toHexString()}`)
+    .expect(200)
+    .expect((res) => {
+      // Assertion using expect module
+      expect(res.body.todo.text).toBe(todos[0].text);
+      // res.body is an object.
+    }).end(done);
+  })
+
+  it('should return 404 if todo not found', (done) => {
+    var hexId = new ObjectID().toHexString();
+    request(app)
+    .get(`/todos/${hexId}`)
+    .expect(404)
+    .end(done);
+  })
+
+  it('should return 404 for non-object ids', (done) => {
+    request(app)
+    .get('/todos/123')
+    .expect(404)
+    .end(done);
+  })
+});

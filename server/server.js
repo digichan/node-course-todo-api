@@ -48,7 +48,8 @@ app.get('/todos/:id', (req, res) => {
       return res.status(404).send('todo not found');
     }
     // if todo - send it back
-    res.send({todo});// res.send(todo);
+    res.send({todo}); // res.send({todo1: todo});
+    //res.send(todo);
 
   }).catch((e) => {
   //error
